@@ -1,5 +1,6 @@
 package com.example.sanpa
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -19,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var googleLoginButton: ImageView
     private lateinit var facebookLoginButton: ImageView
     private lateinit var errorText: TextView
+    private lateinit var signUpText: TextView  // Add this line
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         googleLoginButton = findViewById(R.id.googleLoginButton)
         facebookLoginButton = findViewById(R.id.facebookLoginButton)
         errorText = findViewById(R.id.errorText)
+        signUpText = findViewById(R.id.signUpText)  // Bind sign up text
 
         // Handle login button click
         loginButton.setOnClickListener {
@@ -46,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                            // Navigate to the main activity or dashboard
                         } else {
                             errorText.text = task.exception?.localizedMessage ?: "Login failed"
                             errorText.visibility = TextView.VISIBLE
@@ -85,6 +89,12 @@ class LoginActivity : AppCompatActivity() {
         facebookLoginButton.setOnClickListener {
             Toast.makeText(this, "Facebook login clicked", Toast.LENGTH_SHORT).show()
             // Implement Facebook login logic here
+        }
+
+        // Handle Sign Up click
+        signUpText.setOnClickListener {
+            val intent = Intent(this, SignUpScreen::class.java)
+            startActivity(intent)
         }
     }
 }
