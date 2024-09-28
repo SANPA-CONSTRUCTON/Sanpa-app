@@ -1,49 +1,41 @@
 package com.example.sanpa
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sanpa.databinding.ActivitySignUpScreenBinding // Ensure this matches your XML file name
 import com.google.firebase.auth.FirebaseAuth
 
 class SignUpScreen : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var binding: ActivitySignUpScreenBinding // Use the correct binding class
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+
+        // Initialize View Binding
+        binding = ActivitySignUpScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Initialize UI elements
-        val usernameField = findViewById<EditText>(R.id.usernameField)
-        val emailField = findViewById<EditText>(R.id.emailField)
-        val passwordField = findViewById<EditText>(R.id.passwordField)
-        val confirmPasswordField = findViewById<EditText>(R.id.confirmPasswordField)
-        val signUpButton = findViewById<Button>(R.id.signUpButton)
-        val errorMessage = findViewById<TextView>(R.id.errorMessage)
-        val googleSignIn = findViewById<ImageView>(R.id.googleSignIn)
-        val facebookSignIn = findViewById<ImageView>(R.id.facebookSignIn)
-
-        signUpButton.setOnClickListener {
-            val username = usernameField.text.toString().trim()
-            val email = emailField.text.toString().trim()
-            val password = passwordField.text.toString().trim()
-            val confirmPassword = confirmPasswordField.text.toString().trim()
+        binding.submitButton.setOnClickListener { // Use the ID from your XML
+            val username = binding.name.text.toString().trim() // Updated ID for name field
+            val email = binding.email.text.toString().trim() // Updated ID for email field
+            val password = binding.password.text.toString().trim() // Updated ID for password field
+            val confirmPassword = binding.rePassword.text.toString().trim() // Updated ID for re-password field
 
             // Validate input fields
             if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                errorMessage.text = "Please fill in all fields"
+                showToast("Please fill in all fields")
                 return@setOnClickListener
             }
 
             if (password != confirmPassword) {
-                errorMessage.text = "Passwords do not match"
+                showToast("Passwords do not match")
                 return@setOnClickListener
             }
 
@@ -51,23 +43,17 @@ class SignUpScreen : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "Sign-up successful", Toast.LENGTH_SHORT).show()
-                        errorMessage.text = ""
+                        showToast("Sign-up successful")
                     } else {
-                        errorMessage.text = task.exception?.localizedMessage ?: "Sign-up failed"
+                        showToast(task.exception?.localizedMessage ?: "Sign-up failed")
                     }
                 }
         }
 
-        // Set click listeners for Google and Facebook sign-in
-        googleSignIn.setOnClickListener {
-            // Handle Google sign-up logic
-            Toast.makeText(this, "Google Sign-In Clicked", Toast.LENGTH_SHORT).show()
-        }
 
-        facebookSignIn.setOnClickListener {
-            // Handle Facebook sign-up logic
-            Toast.makeText(this, "Facebook Sign-In Clicked", Toast.LENGTH_SHORT).show()
-        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

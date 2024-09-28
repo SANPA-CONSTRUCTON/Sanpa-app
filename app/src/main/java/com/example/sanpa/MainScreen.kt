@@ -3,41 +3,40 @@ package com.example.sanpa
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sanpa.databinding.ActivityMainScreenBinding // Import the binding class
 
 class MainScreen : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainScreenBinding // Declare the binding variable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main_screen)
 
-        // Initialize buttons and footer text
-        val signInButton: Button = findViewById(R.id.signInButton)
-        val dashboardButton: Button = findViewById(R.id.dashboardButton)
-        val footerText: TextView = findViewById(R.id.footerText)
+        // Inflate the layout using View Binding
+        binding = ActivityMainScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Set up click listeners
-        signInButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             // Navigate to the Sign In Activity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Close MainScreen if needed
         }
 
-        dashboardButton.setOnClickListener {
+        binding.signupButton.setOnClickListener {
             // Navigate to the Dashboard
             val intent = Intent(this, DashBoard::class.java)
             startActivity(intent)
             finish() // Close MainScreen if needed
         }
 
-        footerText.setOnClickListener {
+        binding.textView.setOnClickListener {
             // Show terms and conditions dialog
             showTermsDialog()
         }
